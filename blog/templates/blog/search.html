@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<h1>Search results</h1>
+<ul>
+    {% for post in object_list %}
+    <article class="media content-section border rounded overflow-hidden flex-md-row">
+      <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" alt="">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+          <small class="text-muted">{{ post.date_posted|date:"d M, Y" }}</small>
+        </div>
+        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+      </div>
+    </article>
+      {% empty %}
+      No results found.
+    {% endfor %}
+  </ul>
+{% endblock content%}

@@ -1,0 +1,34 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<h1> Latest Posts!</h1>
+{% for post in posts %}
+<article class="media content-section border rounded overflow-hidden flex-md-row">
+  <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" alt="">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+      <small class="text-muted">{{ post.date_posted|date:"d M, Y" }}</small>
+    </div>
+    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+    <p class="article-content">{{ post.content }}</p>
+    <span class="like-count{{ post.id }}">
+      {{ post.total_likes }}
+    </span>
+    Like{{ post.total_likes|pluralize }}
+    {% if user.is_authenticated %}
+    <form action="{% url 'like-post' %}" method="POST" class='like-form' id="{{ post.id }}">
+      {% csrf_token %}
+      {% if user.username in post.likedby %}
+      <button type='submit' name='post_id' value="{{ post.id }}"
+        class="btn btn-danger like-btn{{ post.id }}">Dislike</button>
+      {% else %}
+      <button type='submit' name='post_id' value="{{ post.id }}" class="btn btn-primary like-btn{{ post.id }}">
+        Like
+      </button>
+      {% endif %}
+    </form>
+    {% endif %}
+  </div>
+</article>
+{% endfor %}
+{% endblock content%}

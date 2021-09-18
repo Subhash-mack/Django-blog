@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,26 +48,16 @@
         <form action="{% url 'search-results' %}" method="get" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
           <input name="q" type="search" id="query" class="form-control form-control-dark" placeholder="Search..."
             aria-label="Search">
-            <script>
-              $(function () {
-                var availableTags = [{% for obj in object_list %}
-                  "{{ obj.title }}",
-                  {% endfor %}
-                ];
-                $("#query").autocomplete({
-                  source: availableTags
-                });
-              });
-            
-              </script>
         </form>
 
         <div class="text-end">
           {% if user.is_authenticated %}
-          <a href="{% url 'profile' %}" class="btn btn-warning">Profile</a>
+            {% show_notifications %}
+          <a style="margin-right:5px;" href="{% url 'profile' %}" class="btn btn-warning">Profile</a>
           <a href="{% url 'logout' %}" class="btn btn-outline-light me-2">Logout</a>
           {% else %}
           <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+          <span></span>
           <a href="{% url 'register' %}" class="btn btn-warning">Sign-up</a>
           {% endif %}
         </div>
@@ -104,58 +95,44 @@
   </main>
  
   <!-- Optional JavaScript; choose one of the two! -->
-  <script type="text/javascript" src="{% static 'blog/jquery.js' %}"></script>
-  {% block scripts %}
-  {% endblock scripts %}
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-  </script>
-  <script>
-      $('.like-form').submit(function (e) {
-    e.preventDefault()
-    const post_id = $(this).attr('id')
-    const liketest = $(`.like-btn${post_id}`).text()
-    const trim = $.trim(liketest)
-    const url = $(this).attr('action')
-    let res;
-    const likes = $(`.like-count${post_id}`).text()
-    const trimcount = parseInt(likes)
-    console.log(trim)
-
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: {
-        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
-        'post_id': post_id,
-      },
-      success: function (response) {
-        if (trim === 'Dislike') {
-          $(`.like-btn${post_id}`).text('Like')
-          $(`.like-btn${post_id}`).removeClass('btn btn-danger')
-          $(`.like-btn${post_id}`).addClass('btn btn-primary')
-          res = trimcount - 1
-        } else {
-          $(`.like-btn${post_id}`).text('Dislike')
-          $(`.like-btn${post_id}`).addClass('btn btn-danger')
-          res = trimcount + 1
-        }
-        $(`.like-count${post_id}`).text(res)
-      },
-      error: function (response) {
-        console.log('error', response);
-      }
-    })
-
-  });
-  </script>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
-  </script>
- 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous">
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <script type="text/javascript" src="{% static 'blog/jquery.js' %}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+  </script>
+  <link href=  
+  "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+          rel="stylesheet" type="text/css" />  
+    {% block scripts %}
+    {% endblock scripts %}
+  <script>
+            $(function() {
+          var availableTags = [
+          {% for obj in object_list %}
+          "{{ obj.title }}",
+          {% endfor %}
+          ];
+        $("#query").autocomplete({
+          source: availableTags
+            });
+            });
+        //     $(function searchquery() {
+        //       console.log(value);
+        //   var availableTags = [{% for obj in object_list %}
+        //   "{{ obj.title }}",
+        //   {% endfor %}
+        //         ];
+        // $("#query").autocomplete({
+        //   source: availableTags
+        //     });
+        //     });
+      </script>
+
+
   <!-- Option 1: Bootstrap Bundle with Popper -->
   
   

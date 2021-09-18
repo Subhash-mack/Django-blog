@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import os
+import django_heroku
 
 load_dotenv()
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -147,6 +148,10 @@ EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER= os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD= os.getenv('EMAIL_PASS')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+django_heroku.settings(locals())
+
 
 
 #vgytkviclaldjtrx

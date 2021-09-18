@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="dropdown">
+	<span style="margin-right:5px;"class="badge bg-primary notification-badge fa fa-solid fa-bell fa-lg" onclick="showNotifications()">
+		{% if notifications.count > 0 %}
+		{{ notifications.count }}
+		{% endif %}
+	</span>
+<div class="dropdown-content d-none" id="notification-container">
+    {% for notification in notifications %}
+    	{% if notification.post %}
+			{% if notification.Notification_type == 1 %}
+			<div class="dropdown-item-parent">
+				<a href="{% url 'post-notification' notification.pk notification.post.pk %}">@{{ notification.from_user }} liked your post at {{ notification.date }}</a>
+				<span class="dropdown-item-close" onclick="removeNotifications(`{% url 'notification-delete' notification.pk %}`,`{{ request.path }}`)">&times;</span>
+			</div>
+			{% elif notification.Notification_type == 2 %}
+			<div class="dropdown-item-parent">
+				<a href="{% url 'post-notification' notification.pk notification.post.pk %}">@{{ notification.from_user }} commented on your post at {{ notification.date }}</a>
+				<span class="dropdown-item-close" onclick="removeNotifications(`{% url 'notification-delete' notification.pk %}`,`{{ request.path }}`)">&times;</span>
+			</div>
+			{% endif %}
+		{% endif %}
+	{% endfor %}
+	</div>
+	</div>

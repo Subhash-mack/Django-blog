@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
-from .models import Post,Comments,Events
+from .models import Notification, Post,Comments,Events
 from django.db.models import Q
+from django.views import View
 from .forms import CommentForm,EventForm
 from .utils import Calendar
 from django.utils.safestring import mark_safe
@@ -164,6 +165,8 @@ def like_post(request):
     else:
         post.likes.add(request.user)
         is_liked=True
+        if request.user!=post.author:
+            Notification.objects.create(Notification_type=1,from_user=request.user,to_user=post.author,post=post)
     data={
         'value':is_liked,
         'likes':post.likes.all().count()
@@ -179,7 +182,10 @@ def comment_post(request):
             content=request.POST.get('content')
             comment=Comments.objects.create(post=post,user=request.user,content=content)
             comment.save()
-            return redirect(post.get_absolute_url())
+    if request.user!=post.author:
+        Notification.objects.create(Notification_type=2,from_user=request.user,to_user=post.author,post=post)
+
+    return redirect(post.get_absolute_url())
 
 def deletecomment(request,id):
     comment=get_object_or_404(Comments,id=id)
@@ -190,3 +196,19 @@ def deletecomment(request,id):
 
 def about(request):
     return render(request,'blog/about.html',{'title':'Blog About'})
+
+class PostNotification(View):
+    def get(self,request,notification_pk,post_pk,*args,**kwargs):
+        notification=Notification.objects.get(pk=notification_pk)
+        notification.user_has_seen=True
+        notification.save()
+        return redirect('post-detail',pk=post_pk)
+
+class RemoveNotification(View):
+     def delete(self, request, notification_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+
+        return HttpResponse('Success', content_type='text/plain')

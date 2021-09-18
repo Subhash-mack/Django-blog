@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
-import datetime
 from django.core.exceptions import ValidationError
 # Create your models here.
 class Post(models.Model):
@@ -52,7 +51,14 @@ class Events(models.Model):
         url = reverse('edit-event', args=(self.id,))
         return f'<a href="{url}"> {self.title} </a>'
 
-    
+class Notification(models.Model):
+    Notification_type=models.IntegerField()
+    to_user=models.ForeignKey(User,related_name="notification_to",on_delete=models.CASCADE,null=True)
+    from_user=models.ForeignKey(User,related_name="notification_from",on_delete=models.CASCADE,null=True)
+    post=models.ForeignKey('Post',on_delete=models.CASCADE,related_name="+",blank=True,null=True)
+    comment=models.ForeignKey('Comments',on_delete=models.CASCADE,related_name="+",blank=True,null=True)
+    date=models.DateTimeField(default=timezone.now)
+    user_has_seen=models.BooleanField(default=False)
     
 
     

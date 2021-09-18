@@ -1,5 +1,5 @@
-from django.urls import path,re_path
-from .views import PostListView,PostDetailView,PostCreateView,PostUpdateView,PostDeleteView,UserPostListView,SearchView,LatestPostsView,CalendarView
+from django.urls import path,re_path,include
+from .views import PostListView,PostDetailView,PostCreateView, PostNotification,PostUpdateView,PostDeleteView,UserPostListView,SearchView,LatestPostsView,CalendarView,PostNotification,RemoveNotification
 from . import views
 
 urlpatterns = [
@@ -19,6 +19,9 @@ urlpatterns = [
     path('calendar/',CalendarView.as_view(),name='calendar'),
     path('event/new/',views.event,name='new-event'),
     path('event/edit/<int:id>/', views.event, name='edit-event'),
+    path('notifications/<int:notification_pk>/post/<int:post_pk>', PostNotification.as_view(),name='post-notification'),
+    path('notification/delete/<int:notification_pk>', RemoveNotification.as_view(), name='notification-delete')
+
 
     
 

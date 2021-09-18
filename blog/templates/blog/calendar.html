@@ -1,10 +1,15 @@
 {% extends 'blog/base.html' %}
 {% block content %}
-<div><a href="{% url 'new-event' %}">Add event</a></div>
 <div class="clearfix">
 	<a class="btn btn-info left" href="{% url 'calendar' %}?{{ prev_month }}"> Previous Month </a>
 	<a class="btn btn-info right" href="{% url 'calendar' %}?{{ next_month }}"> Next Month </a>
+	<div>
+<div>
+	<p><a style="align-items: center;" href="{% url 'new-event' %}">Add event</a></p>
 </div>
+<div>
 {{ calendar }}
-
+</div>
+</div>
+</div>
 {% endblock content %}

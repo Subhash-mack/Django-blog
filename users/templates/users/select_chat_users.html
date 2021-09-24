@@ -1,0 +1,11 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+{{user.username}}
+{% for person in users %}
+{% ifnotequal user.username person  %}
+<p>
+<a href="{% url 'chats' person %}">{{person}}</a>
+</p>
+{% endifnotequal %}
+{% endfor %}
+{% endblock content %}

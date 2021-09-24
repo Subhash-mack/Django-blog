@@ -20,10 +20,7 @@ urlpatterns = [
     path('event/new/',views.event,name='new-event'),
     path('event/edit/<int:id>/', views.event, name='edit-event'),
     path('notifications/<int:notification_pk>/post/<int:post_pk>', PostNotification.as_view(),name='post-notification'),
-    path('notification/delete/<int:notification_pk>', RemoveNotification.as_view(), name='notification-delete')
-
-
-    
+    path('notification/delete/<int:notification_pk>', RemoveNotification.as_view(), name='notification-delete'),   
 
 ]
 

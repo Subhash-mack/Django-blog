@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from users.models import Message
 # Create your models here.
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -57,6 +58,7 @@ class Notification(models.Model):
     from_user=models.ForeignKey(User,related_name="notification_from",on_delete=models.CASCADE,null=True)
     post=models.ForeignKey('Post',on_delete=models.CASCADE,related_name="+",blank=True,null=True)
     comment=models.ForeignKey('Comments',on_delete=models.CASCADE,related_name="+",blank=True,null=True)
+    message=models.ForeignKey(Message,on_delete=models.CASCADE,related_name="chat",blank=True,null=True)
     date=models.DateTimeField(default=timezone.now)
     user_has_seen=models.BooleanField(default=False)
     

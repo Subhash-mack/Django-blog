@@ -1,0 +1,56 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    <h3>You: {{me.username}}</h3>
+    <h3>Thread: {{user.username}}</h3>
+    <ul id="message-list">
+        {% for message in chats %}
+        <li style="padding: 10px; list-style: none;">[ {{message.sender.username}} ]: {{message.text}} {{ message.timeofmessage }}</li>
+        {% endfor %}
+    </ul>
+    <form id="message-form" method="POST">
+        {% csrf_token %}
+        <input type="text" name="message" id="message" required>
+        <button type="submit" class="btn btn-dark" value="Send" class="btn">Send</button>
+
+    </form>
+{% endblock content %}
+{% block scripts %}
+<script>
+    const url='ws://localhost:8000/ws'+window.location.pathname;
+    const ws= new WebSocket(url)
+    ws.onopen=function(){
+        console.log('connection is opened');
+    }
+    ws.onmessage=function(event){
+        console.log('message is received');
+        const ul=document.getElementById('message-list');
+        var li=document.createElement('li');
+        li.style.listStyle='none';
+        li.style.padding='10px';
+        var today = new Date();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var data= JSON.parse(event.data)
+        li.append(document.createTextNode(
+            '[ '+ data.username + ' ]: ' + data.text + ' '+time
+        ));
+        console.log(event.data);
+        ul.append(li);
+
+    }
+    ws.onclose=function(event){
+        console.log('connection is closed');
+    }
+    ws.onerror=function(event){
+        console.log('something went wrong');
+    }
+    const messageForm=document.getElementById('message-form');
+    messageForm.addEventListener('submit',sendMessage)
+    function sendMessage(e){
+        console.log(e.timeStamp);
+        if(e.preventDefault) e.preventDefault();
+        ws.send(document.getElementById('message').value);
+        messageForm.reset();
+        return false;
+    }
+</script>
+{% endblock scripts %}

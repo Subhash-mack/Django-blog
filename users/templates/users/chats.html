@@ -1,18 +1,44 @@
 {% extends 'blog/base.html' %}
 {% block content %}
     <h3>You: {{me.username}}</h3>
-    <h3>Thread: {{user.username}}</h3>
-    <ul id="message-list">
+    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+        <div class="selected-user">
+            <span>To: <span class="name">{{user.username}}</span></span>
+        </div>
+        <div class="chat-container">
+        <ul class="chat-box chatContainerScroll" id="message-list">
         {% for message in chats %}
-        <li style="padding: 10px; list-style: none;">[ {{message.sender.username}} ]: {{message.text}} {{ message.timeofmessage }}</li>
+        {% if message.sender.username|stringformat:"s" == user|stringformat:"s" %}
+        <li class="chat-left">
+            <div class="chat-avatar">
+                <img src="{{ user.profile.image.url }}" alt="other user">
+                <div class="chat-name">{{message.sender.username}}</div>
+            </div>
+            <div class="chat-text">
+                <br>{{message.text}}</div>
+            <div class="chat-hour">{{message.timeofmessage|date:'H:i'}} <span class="fa fa-check-circle"></span></div>
+        </li>
+        {% else %}
+        <li class="chat-right" id="li-right">
+            <div class="chat-hour" id="chat-hour">{{message.timeofmessage|date:'H:i'}}<span class="fa fa-check-circle"></span></div>
+            <div class="chat-text" id="chat-text">
+                <br>{{message.text}}</div>
+            <div class="chat-avatar">
+                <img src="{{ me.profile.image.url }}" alt="Retail Admin">
+                <div class="chat-name">{{message.sender.username}}</div>
+            </div>
+        </li>
+        {% endif %}
+        <li style="padding: 10px; list-style: none;">  </li>
         {% endfor %}
     </ul>
-    <form id="message-form" method="POST">
+    <form id="message-form" class="form-group mt-3 mb-0" method="POST">
         {% csrf_token %}
-        <input type="text" name="message" id="message" required>
+        <input type="text" name="message" class="form-control" id="message" required>
         <button type="submit" class="btn btn-dark" value="Send" class="btn">Send</button>
-
     </form>
+    </div>
+    </div>
 {% endblock content %}
 {% block scripts %}
 <script>
@@ -23,18 +49,28 @@
     }
     ws.onmessage=function(event){
         console.log('message is received');
-        const ul=document.getElementById('message-list');
-        var li=document.createElement('li');
-        li.style.listStyle='none';
-        li.style.padding='10px';
+        //creating chat elements
+        var li=$("<li></li>").addClass("chat-right");
+        const chathour=$("<div></div>").addClass("chat-hour");
+        const chattext=$("<div></div>").addClass("chat-text");
+        var br=$("<br></br>");
+        const span=$("<span></span").addClass("fa fa-check-circle");
+        const chatavatar=$("<div></div>").addClass("chat-avatar");
+        const img=$("<img>").attr('src',"{{ me.profile.image.url }}");
+        const chatname=$("<div></div>").addClass("chat-name");
         var today = new Date();
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        var data= JSON.parse(event.data)
-        li.append(document.createTextNode(
-            '[ '+ data.username + ' ]: ' + data.text + ' '+time
-        ));
-        console.log(event.data);
-        ul.append(li);
+        var data= JSON.parse(event.data);
+        //displaying the created elements
+        chathour.append(document.createTextNode(time),span);
+        chatname.append(document.createTextNode(data.username));
+        chattext.append(br,(document.createTextNode(data.text)));
+        chatavatar.append(img,chatname);
+        li=$(li).append(chathour,chattext,chatavatar);
+        $(".chat-box").append(li);
+        console.log(li);
+
+        
 
     }
     ws.onclose=function(event){

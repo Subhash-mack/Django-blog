@@ -49,6 +49,7 @@
     }
     ws.onmessage=function(event){
         console.log('message is received');
+        var data= JSON.parse(event.data);
         //creating chat elements
         var li=$("<li></li>").addClass("chat-right");
         const chathour=$("<div></div>").addClass("chat-hour");
@@ -56,11 +57,15 @@
         var br=$("<br></br>");
         const span=$("<span></span").addClass("fa fa-check-circle");
         const chatavatar=$("<div></div>").addClass("chat-avatar");
-        const img=$("<img>").attr('src',"{{ me.profile.image.url }}");
+        const sendername=$(".name").text().trim();
+        var img;
+        if(data.username==sendername){
+        img=$("<img>").attr('src',"{{ user.profile.image.url }}");}
+        else
+        {img=$("<img>").attr('src',"{{ me.profile.image.url }}");}
         const chatname=$("<div></div>").addClass("chat-name");
         var today = new Date();
-        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        var data= JSON.parse(event.data);
+        var time = today.getHours() + ":" + today.getMinutes();
         //displaying the created elements
         chathour.append(document.createTextNode(time),span);
         chatname.append(document.createTextNode(data.username));

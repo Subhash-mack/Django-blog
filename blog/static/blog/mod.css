@@ -1,0 +1,95 @@
+:root {
+  --main-bg-color: #b3b3b3;
+}
+
+*:hover,
+*:focus,
+*:active
+ {
+  outline: none;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+}
+
+body {
+    background-color: #fafafa;
+    width: 100%;
+    min-height: 100vh;
+    min-width: 800px!important;
+}
+
+li a {
+    --bs-text-opacity: 1;
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.btn-hover {
+    color: white;
+    border-radius: 4px;
+    margin: 1px;
+    width: 4.6em;
+    padding: 6px 0px;
+    text-align: center;
+    font-size: 0.937em;
+}
+
+.btn-hover:hover {
+    color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity));
+    opacity: 0.9;
+    background-color: white;
+}
+
+.btn{
+    margin: 0.2rem;
+    padding: 0.28rem 0.7rem;
+
+}
+
+.sticky-top { 
+    top: 0.5em; 
+}
+
+.profile-pic{
+    height: 5rem;
+    width: 5rem;
+}
+
+.hover-light {
+    color: #6c757d;
+}
+
+.size-5{
+    max-height: 10rem;
+}
+
+.std-btn {
+    width: 70px;
+    height: 35px;
+}
+
+.article-content {
+    cursor: default;
+}
+
+/*-------------------scrollbar-------------------*/
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+/*-------------------scrollbar-------------------*/

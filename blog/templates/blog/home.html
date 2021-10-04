@@ -1,28 +1,36 @@
 {% extends 'blog/base.html' %}
 {% block content %}
-<h1> Blog Home!</h1>
+{% ifequal 0 posts.count  %}
+<h1> Share new Post!</h1>
+{% endifequal %}
 {% for post in posts %}
-<article class="media content-section border rounded overflow-hidden flex-md-row">
-  <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" alt="">
-  <div class="media-body">
-    <div class="article-metadata">
-      <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
-      <small class="text-muted">{{ post.date_posted|date:"d M, Y" }}</small>
+<article class="media content-section border rounded overflow-hidden mb-4 p-2 pt-3">
+  <div class="row">
+    <div class="col-2 d-flex justify-content-center">
+      <a href="{% url 'user-posts' post.author.username %}">
+      <img class="img-fluid img-thumbnail rounded-circle profile-pic" src="{{ post.author.profile.image.url }}" alt="profile-pic">
+      </a>
     </div>
-    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-    <p class="article-content">{{ post.content }}</p>
-    <span class="like-count{{ post.id }}">
-      {{ post.total_likes }}
-    </span>
-    Like{{ post.total_likes|pluralize }}
+    <div class="col-md-10 article-metadata">
+      <h5 class="m-0 mt-3"><a class="text-black-50 text-decoration-none" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a></h5>
+      <small class="text-muted">● {{ post.date_posted|date:"d M, Y" }} {{ post.timestamp }}</small>
+      <!-- {{ post.date_posted | timesince }} -->
+    </div>
+  </div>
+  <div class="container-fluid m-0 media-body p-1 row">
+    <h3><a class="article-title text-black-50 text-decoration-none hover-light" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+    <p class="article-content overflow-auto size-5">{{ post.content }}</p>
+    <p class="m-1">
+      <span class="like-count{{ post.id }}">{{ post.total_likes }}</span>
+      Like{{ post.total_likes|pluralize }}
+    </p>
     {% if user.is_authenticated %}
     <form action="{% url 'like-post' %}" method="POST" class='like-form' id="{{ post.id }}">
       {% csrf_token %}
       {% if user.username in post.likedby %}
-      <button type='submit' name='post_id' value="{{ post.id }}"
-        class="btn btn-danger like-btn{{ post.id }}">Dislike</button>
+      <button type='submit' name='post_id' value="{{ post.id }}" class="btn std-btn btn-danger like-btn{{ post.id }}">Dislike</button>
       {% else %}
-      <button type='submit' name='post_id' value="{{ post.id }}" class="btn btn-primary like-btn{{ post.id }}">
+      <button type='submit' name='post_id' value="{{ post.id }}" class="btn std-btn btn-primary like-btn{{ post.id }}">
         Like
       </button>
       {% endif %}
